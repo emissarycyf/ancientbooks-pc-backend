@@ -1,10 +1,16 @@
+-- =============================================
+-- 古籍分析 Agent 数据库初始化脚本
+-- 适用于 MySQL 8.0+
+-- =============================================
+
+-- 1. 创建数据库
 CREATE DATABASE IF NOT EXISTS ancient_books_db
   DEFAULT CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
 USE ancient_books_db;
 
--- 对话历史表
+-- 2. 创建对话历史表
 CREATE TABLE chat_history (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     user_id VARCHAR(64) DEFAULT 'anonymous' COMMENT '用户标识',
@@ -19,7 +25,7 @@ CREATE TABLE chat_history (
     INDEX idx_create_time (create_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='古籍对话历史表';
 
--- 古籍元数据表（扩展用）
+-- 3. 创建古籍元数据表
 CREATE TABLE ancient_book (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL COMMENT '书名',
@@ -33,7 +39,7 @@ CREATE TABLE ancient_book (
     deleted TINYINT DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='古籍元数据表';
 
--- 用户表
+-- 4. 创建用户表
 CREATE TABLE IF NOT EXISTS `user` (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     username VARCHAR(64) NOT NULL UNIQUE COMMENT '用户名',
@@ -48,7 +54,12 @@ CREATE TABLE IF NOT EXISTS `user` (
     INDEX idx_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
 
--- 插入默认管理员账户（密码：admin123，BCrypt 加密后）
+-- 5. 插入默认管理员账户（密码：admin123，BCrypt 加密后）
 INSERT INTO `user` (username, password, email, role, status)
 VALUES ('admin', '$2a$10$YQYxhYqLq5YqLq5YqLq5YOHLq5YqLq5YqLq5YqLq5YqLq5YqLq5Yq', 'admin@ancientbooks.com', 'ADMIN', 1)
 ON DUPLICATE KEY UPDATE id=id;
+
+-- 6. 验证数据
+SELECT 'Database initialized successfully' AS status;
+SELECT COUNT(*) AS user_count FROM user;
+SELECT username, email, role, status FROM user WHERE username = 'admin';
