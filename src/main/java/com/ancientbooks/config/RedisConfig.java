@@ -18,10 +18,16 @@ public class RedisConfig {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
 
-        Jackson2JsonRedisSerializer<Object> jackson = new Jackson2JsonRedisSerializer<>(Object.class);
+        // 配置 ObjectMapper
         ObjectMapper om = new ObjectMapper();
-        om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-        jackson.setObjectMapper(om);
+        om.activateDefaultTyping(
+            LaissezFaireSubTypeValidator.instance,
+            ObjectMapper.DefaultTyping.NON_FINAL,
+            JsonTypeInfo.As.PROPERTY
+        );
+
+        // 使用构造函数传入 ObjectMapper（避免使用已过时的 setObjectMapper）
+        Jackson2JsonRedisSerializer<Object> jackson = new Jackson2JsonRedisSerializer<>(om, Object.class);
 
         StringRedisSerializer string = new StringRedisSerializer();
         template.setKeySerializer(string);
