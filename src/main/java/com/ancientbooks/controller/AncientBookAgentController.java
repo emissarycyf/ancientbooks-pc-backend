@@ -4,6 +4,7 @@ import com.ancientbooks.dto.ChatRequest;
 import com.ancientbooks.dto.Result;
 import com.ancientbooks.entity.ChatHistory;
 import com.ancientbooks.properties.CozeProperties;
+import com.ancientbooks.security.UserPrincipal;
 import com.ancientbooks.service.ChatHistoryService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -172,7 +173,14 @@ public class AncientBookAgentController {
     }
 
     private String getCurrentUserId() {
-        // TODO: 接入 JWT 后从 SecurityContext 获取真实用户ID
+        org.springframework.security.core.Authentication authentication =
+                org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof UserPrincipal principal) {
+            return principal.getUserId().toString();
+        }
+
+        // 未登录时的兜底值
         return "anonymous";
     }
 }

@@ -32,3 +32,23 @@ CREATE TABLE ancient_book (
     update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted TINYINT DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='古籍元数据表';
+
+-- 用户表
+CREATE TABLE IF NOT EXISTS `user` (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    username VARCHAR(64) NOT NULL UNIQUE COMMENT '用户名',
+    password VARCHAR(128) NOT NULL COMMENT '密码（BCrypt 加密）',
+    email VARCHAR(128) COMMENT '邮箱',
+    role VARCHAR(32) DEFAULT 'USER' COMMENT '角色：ADMIN、USER',
+    status TINYINT DEFAULT 1 COMMENT '状态：0-禁用 1-正常',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除 0-正常 1-删除',
+    INDEX idx_username (username),
+    INDEX idx_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
+
+-- 插入默认管理员账户（密码：admin123，BCrypt 加密后）
+INSERT INTO `user` (username, password, email, role, status)
+VALUES ('admin', '$2a$10$YQYxhYqLq5YqLq5YqLq5YOHLq5YqLq5YqLq5YqLq5YqLq5YqLq5Yq', 'admin@ancientbooks.com', 'ADMIN', 1)
+ON DUPLICATE KEY UPDATE id=id;
