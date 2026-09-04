@@ -97,10 +97,52 @@ mvn spring-boot:run
 
 ## 接口说明
 
+### 认证接口
+
+#### 用户登录
+```
+POST /api/auth/login
+```
+
+**请求体：**
+```json
+{
+  "username": "admin",
+  "password": "admin123"
+}
+```
+
+**响应：**
+```json
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiJ9...",
+    "userId": 1,
+    "username": "admin",
+    "role": "ADMIN"
+  }
+}
+```
+
+#### 用户登出
+```
+POST /api/auth/logout
+Authorization: Bearer {token}
+```
+
+#### 刷新 Token
+```
+POST /api/auth/refresh
+Authorization: Bearer {token}
+```
+
 ### SSE 流式对话
 
 ```
 GET /api/agent/stream/chat?query={问题}&conversationId={会话ID}
+Authorization: Bearer {token}
 ```
 
 **参数：**
@@ -117,6 +159,40 @@ GET /api/agent/stream/chat?query={问题}&conversationId={会话ID}
 - ⚠️ 生产环境必须使用环境变量或配置中心（Nacos/Apollo）
 - ⚠️ 确保 Coze Agent 已发布，否则 API 会返回 401
 - ⚠️ 首次运行前必须先初始化数据库
+- ⚠️ JWT Secret 在生产环境必须更换为高强度随机字符串
+- ⚠️ 限流配置默认开启（30次/分钟），可根据实际情况调整
+- ⚠️ 所有接口（除登录/注册外）都需要在请求头携带 `Authorization: Bearer {token}`
+
+## 快速测试
+
+### 1. 启动服务
+
+确保 MySQL 和 Redis 已启动，然后运行：
+
+```bash
+mvn spring-boot:run
+```
+
+### 2. 初始化数据库
+
+```bash
+mysql -u root -p < src/main/resources/schema.sql
+```
+
+### 3. 测试登录
+
+```bash
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
+```
+
+### 4. 测试对话接口
+
+```bash
+curl "http://localhost:8080/api/agent/stream/chat?query=你好&conversationId=" \
+  -H "Authorization: Bearer {token}"
+```
 
 ## 开发规范
 
