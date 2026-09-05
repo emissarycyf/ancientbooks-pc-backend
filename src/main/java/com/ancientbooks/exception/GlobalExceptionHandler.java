@@ -41,6 +41,12 @@ public class GlobalExceptionHandler {
         return Result.error(400, msg);
     }
 
+    @ExceptionHandler(BusinessException.class)
+    public Result<String> handleBusinessException(BusinessException e) {
+        log.warn("业务异常: {}", e.getMessage());
+        return Result.error(e.getCode() != null ? e.getCode() : 500, e.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public Result<String> handleException(Exception e) {
         log.error("系统异常", e);

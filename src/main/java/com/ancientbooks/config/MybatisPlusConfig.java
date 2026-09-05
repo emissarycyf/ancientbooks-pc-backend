@@ -3,6 +3,7 @@ package com.ancientbooks.config;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -16,12 +17,14 @@ import javax.sql.DataSource;
 /**
  * MyBatis-Plus 配置
  */
+@Slf4j
 @Configuration
-@MapperScan("com.ancientbooks.mapper")
+@MapperScan(basePackages = "com.ancientbooks.mapper")
 public class MybatisPlusConfig {
 
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+        log.info("Creating SqlSessionFactory...");
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
 
@@ -30,10 +33,18 @@ public class MybatisPlusConfig {
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         sessionFactory.setPlugins(interceptor);
 
-        // 配置 XML 文件路径
+        // 配置 XML 文件路径（如果有的话）
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sessionFactory.setMapperLocations(resolver.getResources("classpath*:mapper/**/*.xml"));
 
         return sessionFactory.getObject();
+    }
+
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        log.info("Creating MybatisPlusInterceptor...");
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        return interceptor;
     }
 }

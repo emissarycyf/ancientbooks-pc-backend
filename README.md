@@ -65,6 +65,8 @@ src/main/resources/
 
 #### 2.1 启动 MySQL 服务
 
+以后每次启动项目，只需要确保 MySQL 服务在后台运行，然后直接运行你的 Java 后端代码就可以了，完全不需要再次执行这些建表命令。
+
 **Windows:**
 ```powershell
 # 方式一：通过服务管理器启动
@@ -77,6 +79,11 @@ net start MySQL80
 ```bash
 mysql -u root -pcyf12345 -e "SELECT 1"
 # 如果成功，应该返回：1
++---+
+| 1 |
++---+
+| 1 |
++---+
 ```
 
 #### 2.2 创建数据库和表
@@ -185,10 +192,12 @@ EXIT;
 **方式一：命令行启动（开发环境推荐）**
 ```bash
 # 进入 Redis 安装目录
-cd "C:\Program Files\Redis"
+cd "[C:\Program Files\Redis](D:\Redis\Redis-x64-5.0.14.1)"
 
 # 启动 Redis（带密码验证）
 redis-server --requirepass cyf12345
+# 优先尝试下面这种
+.\redis-server
 ```
 
 **方式二：服务方式启动（生产环境推荐）**
@@ -210,8 +219,9 @@ redis-server --service-uninstall
 
 ```bash
 # 启动 Redis 客户端
+要切cd D:\Redis\Redis-x64-5.0.14.1
 redis-cli -a cyf12345
-
+redis-cli(改application.yml后，暂未尝试)
 # 测试连接
 PING
 # 应该返回：PONG
@@ -229,7 +239,7 @@ EXIT
 ```
 
 **Redis 密码配置说明：**
-- 后端已配置 Redis 密码为 `cyf12345`
+- 后端暂未配置 Redis 密码，若设置则为 `cyf12345`
 - 如果 Redis 没有设置密码，需要修改 `application.yml` 中的 `spring.data.redis.password` 为空字符串 `""`
 
 ### 4. 配置后端
@@ -314,13 +324,13 @@ logging:
 
 **重要配置说明：**
 
-| 配置项 | 值 | 说明 |
-|--------|-----|------|
-| `spring.datasource.password` | `cyf12345` | ✅ MySQL 密码（已配置） |
-| `spring.data.redis.password` | `cyf12345` | ✅ Redis 密码（已配置） |
+| 配置项 | 值 | 说明                            |
+|--------|-----|---------------------------------|
+| `spring.datasource.password` | `cyf12345` | ✅ MySQL 密码（已配置）         |
+| `spring.data.redis.password` | `cyf12345` |  Redis 密码（暂未配置）         |
 | `coze.pat-token` | `pat_xxxxxxxxxxxx` | ⚠️ **需要替换**为实际 PAT Token |
-| `coze.bot-id` | `xxxxxx` | ⚠️ **需要替换**为实际 Bot ID |
-| `jwt.secret` | 测试密钥 | ⚠️ 生产环境必须更换 |
+| `coze.bot-id` | `xxxxxx` | ⚠️ **需要替换**为实际 Bot ID    |
+| `jwt.secret` | 测试密钥 | ⚠️ 生产环境必须更换             |
 
 **获取 Coze 配置：**
 1. 访问 https://www.coze.cn
@@ -358,9 +368,14 @@ Tomcat started on port 8080 (http) with context path '/api'
 
 **检查后端是否启动成功：**
 ```bash
+# Linux
 curl http://localhost:8080/api/auth/login -X POST \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
+# powershell  
+
+Invoke-WebRequest -Uri "http://localhost:8080/api/auth/login" -Method POST -ContentType "application/json" -Body '{"username":"admin","password":"admin123"}' -UseBasicParsing
+
 ```
 
 **应该返回：**
@@ -520,7 +535,8 @@ mvn spring-boot:run
 ### 2. 初始化数据库
 
 ```bash
-mysql -u root -p < src/main/resources/schema.sql
+mysql -u root -pcyf12345
+source D:/code/ancinetbooks-Analyse/ancientbooks-pc-backend/src/main/resources/schema.sql
 ```
 
 ### 3. 测试登录
@@ -541,3 +557,4 @@ curl "http://localhost:8080/api/agent/stream/chat?query=你好&conversationId=" 
 ## 开发规范
 
 详见 `.claude/skills/后端开发规范_SpringBoot3_MyBatis-Plus.md`
+

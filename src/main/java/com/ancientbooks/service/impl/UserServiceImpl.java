@@ -23,10 +23,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public LoginResponse login(LoginRequest request) {
-        // 1. 查询用户
-        User user = this.getOne(Wrappers.<User>lambdaQuery()
-                .eq(User::getUsername, request.getUsername())
-                .eq(User::getDeleted, 0));
+        // 1. 查询用户（使用自定义SQL方法，避免Wrapper兼容性问题）
+        User user = baseMapper.findByUsername(request.getUsername());
 
         if (user == null) {
             throw new com.ancientbooks.exception.BusinessException("用户名或密码错误");

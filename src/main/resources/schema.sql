@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 -- 5. 插入默认管理员账户（密码：admin123，BCrypt 加密后）
 INSERT INTO `user` (username, password, email, role, status)
-VALUES ('admin', '$2a$10$YQYxhYqLq5YqLq5YqLq5YOHLq5YqLq5YqLq5YqLq5YqLq5YqLq5Yq', 'admin@ancientbooks.com', 'ADMIN', 1)
+VALUES ('admin', '$2b$10$zY4g4FlKWrZj9dxp//iZXuj2JJw63b3SPUKjd2QO1jPw9VYgis3nO', 'admin@ancientbooks.com', 'ADMIN', 1)
 ON DUPLICATE KEY UPDATE id=id;
 
 -- 6. 验证数据
