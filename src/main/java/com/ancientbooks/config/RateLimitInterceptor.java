@@ -92,7 +92,9 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
         // 添加响应头
         response.addHeader("X-RateLimit-Limit", String.valueOf(maxRequests));
-        response.addHeader("X-RateLimit-Remaining", String.valueOf(maxRequests - count));
+        // count 已在上面的逻辑中检查过非 null，此处使用三元运算符避免静态分析警告
+        response.addHeader("X-RateLimit-Remaining",
+            String.valueOf(maxRequests - (count != null ? count : 0L)));
         response.addHeader("X-RateLimit-Reset", String.valueOf(windowSeconds));
 
         return true;
