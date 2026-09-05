@@ -100,7 +100,7 @@ public class AncientBookAgentController {
             // 同时提取内容用于持久化
             extractContent(chunk, fullReply, convIdHolder);
         } catch (Exception e) {
-            log.error("SSE 发送失败", e);
+            log.error("SSE 发送失败: {}", e.getMessage(), e);
             emitter.completeWithError(e);
         }
     }
@@ -138,7 +138,7 @@ public class AncientBookAgentController {
     }
 
     private void handleError(Throwable err, SseEmitter emitter) {
-        log.error("Coze API 错误", err);
+        log.error("Coze API 错误: {}", err.getMessage(), err);
         try {
             emitter.send(SseEmitter.event().name("error").data("Agent 调用失败: " + err.getMessage()));
         } catch (Exception ignored) {}
@@ -171,7 +171,7 @@ public class AncientBookAgentController {
             history.setConversationId(convId);
             chatHistoryService.save(history);
         } catch (Exception e) {
-            log.error("保存对话历史失败", e);
+            log.error("保存对话历史失败: {}", e.getMessage(), e);
         }
     }
 
@@ -205,7 +205,7 @@ public class AncientBookAgentController {
             try {
                 emitter.send(SseEmitter.event().name("error").data("分析内容不能为空"));
             } catch (Exception e) {
-                log.error("发送错误事件失败", e);
+                log.error("发送错误事件失败: {}", e.getMessage(), e);
             }
             emitter.complete();
             return emitter;
@@ -225,7 +225,7 @@ public class AncientBookAgentController {
                     try {
                         emitter.send(SseEmitter.event().data(chunk));
                     } catch (Exception e) {
-                        log.error("SSE 发送失败", e);
+                        log.error("SSE 发送失败: {}", e.getMessage(), e);
                         emitter.completeWithError(e);
                     }
                 }
@@ -236,7 +236,7 @@ public class AncientBookAgentController {
                     try {
                         emitter.send(SseEmitter.event().name("error").data("分析失败: " + error));
                     } catch (Exception e) {
-                        log.error("发送错误事件失败", e);
+                        log.error("发送错误事件失败: {}", e.getMessage(), e);
                     }
                     emitter.complete();
                 }
@@ -247,7 +247,7 @@ public class AncientBookAgentController {
                         // 发送完成标记
                         emitter.send(SseEmitter.event().data("[DONE]"));
                     } catch (Exception e) {
-                        log.error("发送完成事件失败", e);
+                        log.error("发送完成事件失败: {}", e.getMessage(), e);
                     }
                     emitter.complete();
 
@@ -262,11 +262,11 @@ public class AncientBookAgentController {
                 }
             });
         } catch (Exception e) {
-            log.error("调用 Coze Service 失败", e);
+            log.error("调用 Coze Service 失败: {}", e.getMessage(), e);
             try {
                 emitter.send(SseEmitter.event().name("error").data("系统异常: " + e.getMessage()));
             } catch (Exception ex) {
-                log.error("发送错误事件失败", ex);
+                log.error("发送错误事件失败: {}", ex.getMessage(), ex);
             }
             emitter.complete();
         }
@@ -297,7 +297,7 @@ public class AncientBookAgentController {
 
             return Result.success(result);
         } catch (Exception e) {
-            log.error("古籍分析失败", e);
+            log.error("古籍分析失败: {}", e.getMessage(), e);
             return Result.error("分析失败: " + e.getMessage());
         }
     }
