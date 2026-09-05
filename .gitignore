@@ -43,3 +43,10 @@ application-prod.yml
 ### Custom Directories ###
 skills/
 ignore/
+
+### Temporary Files ###
+cp.txt
+package.json
+node_modules/
+temp/
+.idea-cache-clean.md

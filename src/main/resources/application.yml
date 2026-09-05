@@ -10,6 +10,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/ancient_books_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
+    # ⚠️ 安全警告：生产环境请使用环境变量或配置中心
+    # 例如：${DB_PASSWORD:default_password}
     password: cyf12345
     hikari:
       maximum-pool-size: 20
@@ -49,9 +51,12 @@ mybatis-plus:
       logic-not-delete-value: 0
 
 # Coze 扣子配置
+# ⚠️ 安全警告：生产环境请使用环境变量或配置中心
 coze:
   base-url: https://api.coze.cn/open_api/v2/chat
+  # 请替换为真实的 PAT Token
   pat-token: "pat_xxxxxxxxxxxx"
+  # 请替换为真实的 Bot ID
   bot-id: "xxxxxx"
 
 # 日志

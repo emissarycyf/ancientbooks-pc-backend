@@ -78,7 +78,11 @@ public class RateLimitInterceptor implements HandlerInterceptor {
             log.warn("请求过于频繁，IP：{}, Path：{}, Count：{}", key, path, count);
             response.setStatus(429);
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write("{\"code\":429,\"msg\":\"请求过于频繁，请稍后再试\"}");
+            try (var writer = response.getWriter()) {
+                writer.write("{\"code\":429,\"msg\":\"请求过于频繁，请稍后再试\"}");
+            } catch (IOException e) {
+                log.error("写入响应失败", e);
+            }
             return false;
         }
 

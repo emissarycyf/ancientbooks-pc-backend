@@ -40,11 +40,6 @@ public class MybatisPlusConfig {
         return sessionFactory.getObject();
     }
 
-    @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        log.info("Creating MybatisPlusInterceptor...");
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
-        return interceptor;
-    }
+    // 移除重复的 MybatisPlusInterceptor bean 定义
+    // interceptor 已在 sqlSessionFactory() 中配置
 }

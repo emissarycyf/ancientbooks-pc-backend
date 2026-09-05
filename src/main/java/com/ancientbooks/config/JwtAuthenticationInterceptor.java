@@ -43,7 +43,11 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
             log.warn("未提供 Token，请求路径：{}", path);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write("{\"code\":401,\"msg\":\"未登录，请先登录\"}");
+            try (var writer = response.getWriter()) {
+                writer.write("{\"code\":401,\"msg\":\"未登录，请先登录\"}");
+            } catch (IOException e) {
+                log.error("写入响应失败", e);
+            }
             return false;
         }
 
@@ -69,7 +73,11 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
             log.warn("Token 无效或已过期，请求路径：{}，错误：{}", path, e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write("{\"code\":401,\"msg\":\"Token 无效或已过期\"}");
+            try (var writer = response.getWriter()) {
+                writer.write("{\"code\":401,\"msg\":\"Token 无效或已过期\"}");
+            } catch (IOException ioException) {
+                log.error("写入响应失败", ioException);
+            }
             return false;
         }
     }
