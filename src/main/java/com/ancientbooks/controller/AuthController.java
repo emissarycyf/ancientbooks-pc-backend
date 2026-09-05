@@ -3,7 +3,6 @@ package com.ancientbooks.controller;
 import com.ancientbooks.dto.LoginRequest;
 import com.ancientbooks.dto.LoginResponse;
 import com.ancientbooks.dto.Result;
-import com.ancientbooks.entity.User;
 import com.ancientbooks.security.JwtTokenProvider;
 import com.ancientbooks.service.UserService;
 import io.jsonwebtoken.Claims;

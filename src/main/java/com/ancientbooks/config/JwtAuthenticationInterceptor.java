@@ -41,14 +41,23 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(@Nullable HttpServletRequest request,
                             @Nullable HttpServletResponse response,
-                            @Nullable Object handler) throws Exception {
+                            @Nullable Object handler) {
         // 白名单路径放行
+        if (request == null) {
+            return false;
+        }
         String path = request.getRequestURI();
+        if (path == null) {
+            path = "";
+        }
         if (isWhitelistPath(path)) {
             return true;
         }
 
         // 从请求头获取 Token
+        if (response == null) {
+            return false;
+        }
         String header = request.getHeader("Authorization");
         if (header == null || !header.startsWith("Bearer ")) {
             log.warn("未提供 Token，请求路径：{}", path);
@@ -67,7 +76,7 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
 
         try {
             // ✅ 安全检查1：验证Token格式
-            if (token == null || token.trim().isEmpty()) {
+            if (token.trim().isEmpty()) {
                 throw new JwtException("Token不能为空");
             }
 

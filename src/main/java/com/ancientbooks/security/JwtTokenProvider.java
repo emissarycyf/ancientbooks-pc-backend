@@ -42,10 +42,10 @@ public class JwtTokenProvider {
         claims.put("userId", userId);
 
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userId)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .claims(claims)
+                .subject(userId)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -62,14 +62,6 @@ public class JwtTokenProvider {
      */
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
-    }
-
-    /**
-     * 校验 Token 是否有效
-     */
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String userId = extractUserId(token);
-        return (userId.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     /**
