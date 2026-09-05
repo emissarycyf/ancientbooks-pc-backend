@@ -26,8 +26,8 @@ public class RedisConfig {
             JsonTypeInfo.As.PROPERTY
         );
 
-        // 使用构造函数传入 ObjectMapper（避免使用已过时的 setObjectMapper）
-        Jackson2JsonRedisSerializer<Object> jackson = new Jackson2JsonRedisSerializer<>(om, Object.class);
+        // 使用 ObjectMapper 构造序列化器（正确方式）
+        Jackson2JsonRedisSerializer<Object> jackson = new Jackson2JsonRedisSerializer<>(om);
 
         StringRedisSerializer string = new StringRedisSerializer();
         template.setKeySerializer(string);
