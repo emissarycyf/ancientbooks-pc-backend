@@ -3,6 +3,7 @@ package com.ancientbooks.config;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -37,9 +38,9 @@ public class RedisConfig {
         StringRedisSerializer stringSerializer = new StringRedisSerializer();
 
         // 创建 JSON 序列化器（用于 value）
-        RedisSerializer<Object> jsonSerializer = new RedisSerializer<Object>() {
+        RedisSerializer<Object> jsonSerializer = new RedisSerializer<>() {
             @Override
-            public byte[] serialize(Object object) {
+            public byte[] serialize(@Nullable Object object) {
                 if (object == null) {
                     return new byte[0];
                 }
@@ -51,7 +52,7 @@ public class RedisConfig {
             }
 
             @Override
-            public Object deserialize(byte[] bytes) {
+            public @Nullable Object deserialize(@Nullable byte[] bytes) {
                 if (bytes == null || bytes.length == 0) {
                     return null;
                 }
