@@ -174,7 +174,6 @@ SELECT id, username, email, role, status FROM user;
 -- | 1  | admin    | admin@ancientbooks.com | ADMIN |
 -- +----+----------+---------------------+-------+
 
-EXIT;
 ```
 
 ### 3. 启动 Redis 缓存
@@ -323,7 +322,7 @@ logging:
 ```
 
 **重要配置说明：**
-
+``
 | 配置项 | 值 | 说明                            |
 |--------|-----|---------------------------------|
 | `spring.datasource.password` | `cyf12345` | ✅ MySQL 密码（已配置）         |
