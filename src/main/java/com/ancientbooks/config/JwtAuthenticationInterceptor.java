@@ -7,13 +7,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.io.IOException;
 import java.util.Collections;
 
 /**
@@ -23,14 +25,15 @@ import java.util.Collections;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@NullMarked
 public class JwtAuthenticationInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider tokenProvider;
 
     @Override
-    public boolean preHandle(HttpServletRequest request,
-                            HttpServletResponse response,
-                            Object handler) throws Exception {
+    public boolean preHandle(@Nullable HttpServletRequest request,
+                            @Nullable HttpServletResponse response,
+                            @Nullable Object handler) throws Exception {
         // 白名单路径放行
         String path = request.getRequestURI();
         if (isWhitelistPath(path)) {

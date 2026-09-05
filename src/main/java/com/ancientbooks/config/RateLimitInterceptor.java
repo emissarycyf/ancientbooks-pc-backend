@@ -4,6 +4,8 @@ import com.ancientbooks.security.UserPrincipal;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
@@ -11,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,6 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
+@NullMarked
 public class RateLimitInterceptor implements HandlerInterceptor {
 
     private final RedisTemplate<String, Object> redisTemplate;
@@ -40,9 +44,9 @@ public class RateLimitInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request,
-                            HttpServletResponse response,
-                            Object handler) throws Exception {
+    public boolean preHandle(@Nullable HttpServletRequest request,
+                            @Nullable HttpServletResponse response,
+                            @Nullable Object handler) throws Exception {
         // 限流未开启则放行
         if (!enabled) {
             return true;
