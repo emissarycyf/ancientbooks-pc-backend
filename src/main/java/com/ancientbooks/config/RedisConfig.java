@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -26,8 +26,8 @@ public class RedisConfig {
             JsonTypeInfo.As.PROPERTY
         );
 
-        // 使用 ObjectMapper 构造序列化器（正确方式）
-        Jackson2JsonRedisSerializer<Object> jackson = new Jackson2JsonRedisSerializer<>(om);
+        // ✅ 使用 GenericJackson2JsonRedisSerializer（替代已废弃的 Jackson2JsonRedisSerializer）
+        GenericJackson2JsonRedisSerializer<Object> jackson = new GenericJackson2JsonRedisSerializer<>(om);
 
         StringRedisSerializer string = new StringRedisSerializer();
         template.setKeySerializer(string);
