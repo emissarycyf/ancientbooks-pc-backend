@@ -2,7 +2,6 @@ package com.ancientbooks.controller;
 
 import com.ancientbooks.dto.AncientBookAnalysisRequest;
 import com.ancientbooks.dto.ChatRequest;
-import com.ancientbooks.dto.CozeV3ChatRequest;
 import com.ancientbooks.dto.Result;
 import com.ancientbooks.entity.ChatHistory;
 import com.ancientbooks.properties.CozeProperties;
@@ -233,7 +232,7 @@ public class AncientBookAgentController {
 
                 @Override
                 public void onError(String error) {
-                    log.error("Coze API 调用失败", error);
+                    log.error("Coze API 调用失败: {}", error);
                     try {
                         emitter.send(SseEmitter.event().name("error").data("分析失败: " + error));
                     } catch (Exception e) {
