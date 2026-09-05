@@ -53,11 +53,20 @@ mybatis-plus:
 # Coze 扣子配置
 # ⚠️ 安全警告：生产环境请使用环境变量或配置中心
 coze:
-  base-url: https://api.coze.cn/open_api/v2/chat
+  # V3 API 地址
+  base-url-v3: https://api.coze.cn/v3/chat
+  # V2 API 地址（保留兼容）
+  base-url-v2: https://api.coze.cn/open_api/v2/chat
+  # 当前使用的API版本：v3 或 v2
+  api-version: v3
   # 请替换为真实的 PAT Token
-  pat-token: "pat_xxxxxxxxxxxx"
+  pat-token: "pat_nL5I7vgfXWMxgnILtCgJA2kItddRMikkudj4yaXqCt14AMtkMlZWcuzBTlV7Z5Xj"
   # 请替换为真实的 Bot ID
-  bot-id: "xxxxxx"
+  bot-id: "7682050173660758056"
+  # 工作流ID（用于工作流调用）
+  workflow-id: ""
+  # 超时时间（毫秒）
+  timeout: 180000
 
 # 日志
 logging:
