@@ -1652,7 +1652,7 @@ SELECT * FROM mysql.slow_log;
 
 **内部文档**：
 - 后端开发规范：`.claude/skills/后端开发规范_SpringBoot3_MyBatis-Plus.md`
-- 前端开发指南：`skills/frontend-dev-guide.md`
+- 前端开发指南：`skills/backend-dev-guide.md`
 - 安全审查报告：`安全审查报告.md`
 
 ---

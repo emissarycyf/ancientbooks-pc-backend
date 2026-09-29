@@ -53,12 +53,15 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        // 从请求头获取 Token
-        if (response == null) {
-            return false;
-        }
+        // 从请求头获取 Token（优先），URL 参数兜底（兼容 EventSource 等不支持自定义 header 的场景）
         String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
+        String token;
+        if (header != null && header.startsWith("Bearer ")) {
+            token = header.substring(7);
+        } else {
+            token = request.getParameter("token");
+        }
+        if (token == null || token.trim().isEmpty()) {
             log.warn("未提供 Token，请求路径：{}", path);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json;charset=UTF-8");
@@ -69,9 +72,6 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
             }
             return false;
         }
-
-        // 提取 Token
-        String token = header.substring(7);
 
         try {
             // ✅ 安全检查1：验证Token格式
